@@ -24,7 +24,7 @@ import (
 func main() {
 	// USE values ONLY ACTIVE tunnel's CONFIGURATION
 	// also in /etc/amnezia/amneziawg/awg0.conf
-	// available only this values
+	// available only this fields
 	cfg := awgctrlgo.Obfuscation{
 		Jc: 2,
 		Jmin: 10,
