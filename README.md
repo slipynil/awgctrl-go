@@ -13,12 +13,20 @@ go get github.com/slipynil/awgctrl-go
 ### Code example
 
 ```go
+package main
+
+import (
+	"os"
+	"time"
+
+	awgctrlgo "github.com/slipynil/awgctrl-go"
+)
 func main() {
 	// USE values ONLY ACTIVE tunnel's CONFIGURATION
 	// also in /etc/amnezia/amneziawg/awg0.conf
 	// available only this values
-	cfg := amneziawg.Obfuscation{
-		Js: 2,
+	cfg := awgctrlgo.Obfuscation{
+		Jc: 2,
 		Jmin: 10,
 		Jmax: 50,
 		S1: 10,
@@ -34,7 +42,7 @@ func main() {
 
 	// client for managing amneziawg devices
 	// Not creating a new tunnel, using existing one
-	awg, err := amneziawg.New(tunnelName, endpoint, cfg)
+	awg, err := amneziawg.New(tunnelName, endpoint, &cfg)
 	if err != nil {
 		panic(err)
 	}
