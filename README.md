@@ -42,7 +42,7 @@ func main() {
 
 	// client for managing amneziawg devices
 	// Not creating a new tunnel, using existing one
-	awg, err := amneziawg.New(tunnelName, endpoint, &cfg)
+	awg, err := awgctrl-go.New(tunnelName, endpoint, &cfg)
 	if err != nil {
 		panic(err)
 	}
