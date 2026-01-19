@@ -7,7 +7,7 @@ This is a Go package that provides a simple interface to manage amneziawg device
 ### Installation
 To install the package, run the following command:
 ```
-go get github.com/slipynil/awgctrl-go
+go get github.com/slipynil/awgctrl-go@v1.0.2
 ```
 
 ### Code example
