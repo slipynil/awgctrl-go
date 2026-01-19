@@ -3,12 +3,13 @@ package awgctrlgo
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/Jipok/wgctrl-go/wgtypes"
 )
 
 // creates a new configuration file for user connection to the tunnel
-func (a *awg) createFileCfg(fileName string, peerPrivateKey wgtypes.Key, presharedKey wgtypes.Key, peerVirtualIP string) error {
+func (a *awg) createFileCfg(fileName string, peerPrivateKey wgtypes.Key, presharedKey wgtypes.Key, peerVirtualIP string) (string, error) {
 	publicDeviceKey := a.device.PublicKey.String()
 
 	str := fmt.Sprintf(`
@@ -50,15 +51,16 @@ PersistentKeepalive = 25
 	)
 
 	// create configuration file for user
-	file, err := os.Create(fileName + ".conf")
+	filePath := filepath.Join(a.storagePath, fileName+".conf")
+	file, err := os.Create(filePath)
 	if err != nil {
-		return err
+		return "", fmt.Errorf("failed to create file: %w", err)
 	}
 	defer file.Close()
 
 	if _, err := file.Write([]byte(str)); err != nil {
-		return err
+		return "", fmt.Errorf("failed to write to file: %w", err)
 	}
 
-	return nil
+	return filePath, nil
 }

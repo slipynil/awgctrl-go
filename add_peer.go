@@ -9,46 +9,43 @@ import (
 )
 
 // fileName like "user" or "path/to/file/user", virtualEndpoint like "10.66.66.02/32"
-func (a *awg) AddPeer(fileName, virtualEndpoint string) (string, error) {
+// return filePath, peerPublicKey.String(), error
+func (a *awg) AddPeer(fileName, virtualEndpoint string) (string, string, error) {
 
 	// check endpoint format
 	split := strings.Split(virtualEndpoint, "/")
 	if len(split) != 2 {
-		return "", fmt.Errorf("invalid virtualEndpoint format")
+		return "", "", fmt.Errorf("invalid virtualEndpoint format")
 	}
 	// get ip part
 	ip := split[1]
 
 	// check if the ip address is available
 	if !a.isAllowedIP(ip) {
-		return "", fmt.Errorf("no available IP")
+		return "", "", fmt.Errorf("no available IP")
 	}
 	// parse mask and IP virtual endpoint
 	_, ipNet, err := net.ParseCIDR(virtualEndpoint)
 	if err != nil {
-		return "", err
+		return "", "", fmt.Errorf("failed to parse CIDR: %w", err)
 	}
 
 	// generate peer's private key
 	peerPrivateKey, err := wgtypes.GeneratePrivateKey()
 	if err != nil {
-		return "", fmt.Errorf("failed to generate private key: %w", err)
+		return "", "", fmt.Errorf("failed to generate private key: %w", err)
 	}
 
 	// generate PresharedKey
 	presharedKey, err := wgtypes.GenerateKey()
 	if err != nil {
-		return "", fmt.Errorf("failed to generate preshared key: %w", err)
+		return "", "", fmt.Errorf("failed to generate preshared key: %w", err)
 	}
 
 	// create configuration file for user
-	if err := a.createFileCfg(
-		fileName,
-		peerPrivateKey,
-		presharedKey,
-		virtualEndpoint,
-	); err != nil {
-		return "", err
+	filePath, err := a.createFileCfg(fileName, peerPrivateKey, presharedKey, virtualEndpoint)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to create configuration file: %w", err)
 	}
 
 	peerPublicKey := peerPrivateKey.PublicKey()
@@ -66,10 +63,10 @@ func (a *awg) AddPeer(fileName, virtualEndpoint string) (string, error) {
 
 	// Set new device configuration (tunnel)
 	if err := a.client.ConfigureDevice(a.device.Name, cfg); err != nil {
-		return "", err
+		return "", "", fmt.Errorf("failed to configure device: %w", err)
 	}
 
-	return peerPublicKey.String(), nil
+	return filePath, peerPublicKey.String(), nil
 }
 
 // check IP is available
