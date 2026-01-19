@@ -18,6 +18,7 @@ package main
 import (
 	"os"
 	"time"
+	"path/filepath"
 
 	awgctrlgo "github.com/slipynil/awgctrl-go"
 )
@@ -42,7 +43,8 @@ func main() {
 
 	// client for managing amneziawg devices
 	// Not creating a new tunnel, using existing one
-	awg, err := awgctrlgo.New(tunnelName, endpoint, &cfg)
+	storagePath, _ := filepath.Abs("./data")
+	awg, err := awgctrlgo.New(tunnelName, endpoint, storagePath, &cfg)
 	if err != nil {
 		panic(err)
 	}
