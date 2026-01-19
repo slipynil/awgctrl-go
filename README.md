@@ -40,10 +40,11 @@ func main() {
 
 	tunnelName := "awg0"
 	endpoint := "localhost:5050"
+	storagePath, _ := filepath.Abs("./data")
 
 	// client for managing amneziawg devices
 	// Not creating a new tunnel, using existing one
-	storagePath, _ := filepath.Abs("./data")
+	
 	awg, err := awgctrlgo.New(tunnelName, endpoint, storagePath, &cfg)
 	if err != nil {
 		panic(err)
