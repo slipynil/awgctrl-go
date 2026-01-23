@@ -7,7 +7,7 @@ This is a Go package that provides a simple interface to manage amneziawg device
 ### Installation
 To install the package, run the following command:
 ```
-go get github.com/slipynil/awgctrl-go
+go get github.com/slipynil/awgctrl-go@v1.0.2
 ```
 
 ### Code example
@@ -18,6 +18,7 @@ package main
 import (
 	"os"
 	"time"
+	"path/filepath"
 
 	awgctrlgo "github.com/slipynil/awgctrl-go"
 )
@@ -39,10 +40,12 @@ func main() {
 
 	tunnelName := "awg0"
 	endpoint := "localhost:5050"
+	storagePath, _ := filepath.Abs("./data")
 
 	// client for managing amneziawg devices
 	// Not creating a new tunnel, using existing one
-	awg, err := awgctrlgo.New(tunnelName, endpoint, &cfg)
+	
+	awg, err := awgctrlgo.New(tunnelName, endpoint, storagePath, &cfg)
 	if err != nil {
 		panic(err)
 	}
