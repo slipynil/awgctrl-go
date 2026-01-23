@@ -16,7 +16,7 @@ func (a *awg) createFileCfg(fileName string, peerPrivateKey wgtypes.Key, preshar
 [Interface]
 PrivateKey = %s
 Address = %s
-DNS = 1.1.1.1, 8.8.8.8
+DNS = none
 Jc = %v
 Jmin = %v
 Jmax = %v
