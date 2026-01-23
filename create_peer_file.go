@@ -11,6 +11,9 @@ import (
 // creates a new configuration file for user connection to the tunnel
 func (a *awg) createFileCfg(fileName string, peerPrivateKey wgtypes.Key, presharedKey wgtypes.Key, peerVirtualIP string) (string, error) {
 	publicDeviceKey := a.device.PublicKey.String()
+	if publicDeviceKey == "" {
+		return "", fmt.Errorf("public device key is empty")
+	}
 
 	str := fmt.Sprintf(`
 [Interface]
