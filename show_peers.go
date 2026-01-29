@@ -25,8 +25,5 @@ func (a *awg) ShowPeers() error {
 func peerInfo(peer wgtypes.Peer) {
 	fmt.Println("---PEER CONNECTION---")
 	fmt.Println("Public Key:", peer.PublicKey)
-	fmt.Print("Endpoint IP:", peer.Endpoint.IP)
-	fmt.Print("Endpoint port:", peer.Endpoint.Port)
-	fmt.Println("Endpoint zone:", peer.Endpoint.Zone)
 	fmt.Println("Last Handshake:", peer.LastHandshakeTime)
 }
