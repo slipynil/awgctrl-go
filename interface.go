@@ -13,27 +13,25 @@ type awgClient interface {
 }
 
 type awg struct {
-	client      awgClient       // client for working with awg
-	device      *wgtypes.Device // device for working with awg
-	storagePath string          // path to create user.conf files
-	endpoint    string          // IP:PORT
-	obfuscation Obfuscation     // config for obfuscation
+	debug       bool
+	client      awgClient   // client for working with awg
+	deviceName  string      // name of device for working with awg
+	storagePath string      // path to create user.conf files
+	endpoint    string      // IP:PORT
+	obfuscation Obfuscation // config for obfuscation
 }
 
 // Create new awg service,
 // DOES NOT CREATE A NEW TUNNEL, BUT ONLY CONNECTS TO AN EXISTING TUNNEL
-func New(tunnelName, endpoint, storagePath string, obfuscation *Obfuscation) (*awg, error) {
+func New(deviceName, endpoint, storagePath string, obfuscation *Obfuscation) (*awg, error) {
 	client, err := wgctrl.New()
 	if err != nil {
 		return nil, err
 	}
-	device, err := client.Device(tunnelName)
-	if err != nil {
-		return nil, err
-	}
 	return &awg{
+		debug:       true,
 		client:      client,
-		device:      device,
+		deviceName:  deviceName,
 		storagePath: storagePath,
 		endpoint:    endpoint,
 		obfuscation: *obfuscation,

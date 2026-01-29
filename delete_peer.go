@@ -18,5 +18,5 @@ func (a *awg) DeletePeer(peerPublicKeyStr string) error {
 		},
 	}
 	// apply the configuration to the device (tunnel)
-	return a.client.ConfigureDevice(a.device.Name, cfg)
+	return a.client.ConfigureDevice(a.deviceName, cfg)
 }

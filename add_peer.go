@@ -62,8 +62,21 @@ func (a *awg) AddPeer(fileName, virtualEndpoint string) (string, string, error) 
 	}
 
 	// Set new device configuration (tunnel)
-	if err := a.client.ConfigureDevice(a.device.Name, cfg); err != nil {
+	if err := a.client.ConfigureDevice(a.deviceName, cfg); err != nil {
 		return "", "", fmt.Errorf("failed to configure device: %w", err)
+	}
+
+	if a.debug {
+		device, err := a.client.Device(a.deviceName)
+		if err != nil {
+			return "", "", fmt.Errorf("failed to get device: %w", err)
+		}
+		for _, peer := range device.Peers {
+			if peer.PublicKey == peerPublicKey {
+				peerInfo(peer)
+				return filePath, peerPublicKey.String(), nil
+			}
+		}
 	}
 
 	return filePath, peerPublicKey.String(), nil
@@ -73,7 +86,11 @@ func (a *awg) AddPeer(fileName, virtualEndpoint string) (string, string, error) 
 func (a *awg) isAllowedIP(ip string) bool {
 
 	// go through all peers
-	for _, peer := range a.device.Peers {
+	device, err := a.client.Device(a.deviceName)
+	if err != nil {
+		return false
+	}
+	for _, peer := range device.Peers {
 		// go through all occupied IPs of the peer
 		for _, usedIP := range peer.AllowedIPs {
 			// check if IP is already used
