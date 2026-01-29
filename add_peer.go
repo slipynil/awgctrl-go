@@ -17,13 +17,6 @@ func (a *awg) AddPeer(fileName, virtualEndpoint string) (string, string, error) 
 	if len(split) != 2 {
 		return "", "", fmt.Errorf("invalid virtualEndpoint format")
 	}
-	// get ip part
-	ip := split[1]
-
-	// check if the ip address is available
-	if !a.isAllowedIP(ip) {
-		return "", "", fmt.Errorf("no available IP")
-	}
 	// parse mask and IP virtual endpoint
 	_, ipNet, err := net.ParseCIDR(virtualEndpoint)
 	if err != nil {
@@ -80,24 +73,4 @@ func (a *awg) AddPeer(fileName, virtualEndpoint string) (string, string, error) 
 	}
 
 	return filePath, peerPublicKey.String(), nil
-}
-
-// check IP is available
-func (a *awg) isAllowedIP(ip string) bool {
-
-	// go through all peers
-	device, err := a.client.Device(a.deviceName)
-	if err != nil {
-		return false
-	}
-	for _, peer := range device.Peers {
-		// go through all occupied IPs of the peer
-		for _, usedIP := range peer.AllowedIPs {
-			// check if IP is already used
-			if ip == usedIP.IP.String() {
-				return false
-			}
-		}
-	}
-	return true
 }
