@@ -58,12 +58,12 @@ PersistentKeepalive = 25
 	filePath := filepath.Join(a.storagePath, fileName+".conf")
 	file, err := os.Create(filePath)
 	if err != nil {
-		return "", fmt.Errorf("failed to create file: %w", err)
+		return "", fmt.Errorf("failed to create file with filePath %v: %w", filePath, err)
 	}
 	defer file.Close()
 
 	if _, err := file.Write([]byte(str)); err != nil {
-		return "", fmt.Errorf("failed to write to file: %w", err)
+		return "", fmt.Errorf("failed to write to file in path %v: %w", filePath, err)
 	}
 
 	return filePath, nil
