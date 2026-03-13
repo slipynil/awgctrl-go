@@ -5,6 +5,8 @@ This is a Go package that provides a simple interface to manage amneziawg device
 
 ## How to use?
 ### Installation
+You need Go 1.26.0 or higher version
+
 To install the package, run the following command:
 ```
 go get github.com/slipynil/awgctrl-go@v1.1
@@ -55,14 +57,14 @@ func main() {
 	awg.DeviceInfo()
 
 	// create a new peer
-	userPublicKey, err := awg.AddPeer("user", "10.66.66.02/32")
+	peer, err := awg.AddPeer("user", "10.66.66.02/32")
 	if err != nil {
 		panic(err)
 	}
 
 	// delete a peer by public key
 	time.Sleep(time.Minute * 5)
-	if err := awg.DeletePeer(userPublicKey); err != nil {
+	if err := awg.DeletePeer(peer.PublicKey); err != nil {
 		panic(err)
 	}
 }

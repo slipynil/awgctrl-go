@@ -4,16 +4,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/Jipok/wgctrl-go/wgtypes"
 )
 
 // creates a new configuration file for user connection to the tunnel
 func (a *awg) createFileCfg(
 	fileName string,
-	peerPrivateKey wgtypes.Key,
-	presharedKey wgtypes.Key,
-	peerVirtualIP string,
+	peer *Peer,
 ) (string, error) {
 	device, err := a.client.Device(a.deviceName)
 	if err != nil {
@@ -43,8 +39,8 @@ Endpoint = %v
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 25
 `,
-		peerPrivateKey,
-		peerVirtualIP,
+		peer.PrivateKey,
+		peer.VirtualSocket,
 		a.obfuscation.Jc,
 		a.obfuscation.Jmin,
 		a.obfuscation.Jmax,
@@ -55,7 +51,7 @@ PersistentKeepalive = 25
 		a.obfuscation.H3,
 		a.obfuscation.H4,
 		publicDeviceKey,
-		presharedKey.String(),
+		peer.PresharedKey,
 		a.endpoint,
 	)
 

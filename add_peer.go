@@ -25,7 +25,7 @@ func (a *awg) AddPeer(fileName, socket string) (string, *Peer, error) {
 	}
 
 	// generates peer's private key
-	peerPrivateKey, err := wgtypes.GeneratePrivateKey()
+	privateKey, err := wgtypes.GeneratePrivateKey()
 	if err != nil {
 		return "", nil, fmt.Errorf("failed to generate private key: %w", err)
 	}
@@ -36,16 +36,10 @@ func (a *awg) AddPeer(fileName, socket string) (string, *Peer, error) {
 		return "", nil, fmt.Errorf("failed to generate preshared key: %w", err)
 	}
 
-	// create configuration file for user
-	filePath, err := a.createFileCfg(fileName, peerPrivateKey, presharedKey, socket)
-	if err != nil {
-		return "", nil, fmt.Errorf("failed to create configuration file: %w", err)
-	}
-
-	peerPublicKey := peerPrivateKey.PublicKey()
+	publicKey := privateKey.PublicKey()
 
 	peerCfg := wgtypes.PeerConfig{
-		PublicKey:    peerPublicKey,
+		PublicKey:    publicKey,
 		PresharedKey: &presharedKey,
 		AllowedIPs:   []net.IPNet{*ipNet},
 	}
@@ -60,16 +54,24 @@ func (a *awg) AddPeer(fileName, socket string) (string, *Peer, error) {
 		return "", nil, fmt.Errorf("failed to configure device: %w", err)
 	}
 
-	p := &Peer{
-		PublicKey:     peerPublicKey.String(),
+	//
+	peer := &Peer{
+		PrivateKey:    privateKey.String(),
+		PublicKey:     publicKey.String(),
 		PresharedKey:  presharedKey.String(),
 		VirtualSocket: socket,
 	}
 
-	// if debug mode is enabled, print peer info
-	if a.debug {
-		p.Info()
+	// create configuration file for user
+	filePath, err := a.createFileCfg(fileName, peer)
+	if err != nil {
+		return "", nil, fmt.Errorf("failed to create configuration file: %w", err)
 	}
 
-	return filePath, p, nil
+	// if debug mode is enabled, print peer info
+	if a.debug {
+		peer.Info()
+	}
+
+	return filePath, peer, nil
 }
