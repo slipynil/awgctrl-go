@@ -9,7 +9,12 @@ import (
 )
 
 // creates a new configuration file for user connection to the tunnel
-func (a *awg) createFileCfg(fileName string, peerPrivateKey wgtypes.Key, presharedKey wgtypes.Key, peerVirtualIP string) (string, error) {
+func (a *awg) createFileCfg(
+	fileName string,
+	peerPrivateKey wgtypes.Key,
+	presharedKey wgtypes.Key,
+	peerVirtualIP string,
+) (string, error) {
 	device, err := a.client.Device(a.deviceName)
 	if err != nil {
 		return "", err

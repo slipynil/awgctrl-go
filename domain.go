@@ -1,5 +1,7 @@
 package awgctrlgo
 
+import "fmt"
+
 // Obfuscation struct for initialization awg service
 // use your values in /etc/amnezia/amneziawg/file.conf
 type Obfuscation struct {
@@ -12,4 +14,17 @@ type Obfuscation struct {
 	H2   int // Responder to initiator (1 - 2**32-1)
 	H3   int // Data Packet (1 - 2**32-1)
 	H4   int // Cookie Reply (1 - 2**32-1)
+}
+
+type Peer struct {
+	PublicKey     string
+	PresharedKey  string
+	VirtualSocket string
+}
+
+func (p *Peer) Info() {
+	fmt.Println("---CREATED PEER---")
+	fmt.Println("Public Key:", p.PublicKey)
+	fmt.Println("Preshared Key:", p.PresharedKey)
+	fmt.Println("Virtual Socket:", p.VirtualSocket)
 }
