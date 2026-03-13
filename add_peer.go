@@ -11,7 +11,7 @@ import (
 // fileName like a "user" or "path/to/file/user",
 // socket like a "10.66.66.02/32"
 // return filePath, Peer struct, error
-func (a *awg) AddPeer(fileName, socket string) (string, *Peer, error) {
+func (a *awg) AddPeer(fileName, socket, DNS string) (string, *Peer, error) {
 
 	// check endpoint format
 	split := strings.Split(socket, "/")
@@ -63,7 +63,7 @@ func (a *awg) AddPeer(fileName, socket string) (string, *Peer, error) {
 	}
 
 	// create configuration file for user
-	filePath, err := a.createFileCfg(fileName, peer)
+	filePath, err := a.createFileCfg(fileName, DNS, peer)
 	if err != nil {
 		return "", nil, fmt.Errorf("failed to create configuration file: %w", err)
 	}

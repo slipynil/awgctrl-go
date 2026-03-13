@@ -9,6 +9,7 @@ import (
 // creates a new configuration file for user connection to the tunnel
 func (a *awg) createFileCfg(
 	fileName string,
+	dnsFormat string,
 	peer *Peer,
 ) (string, error) {
 	device, err := a.client.Device(a.deviceName)
@@ -17,11 +18,18 @@ func (a *awg) createFileCfg(
 	}
 	publicDeviceKey := device.PublicKey.String()
 
+	var dns string
+	if dnsFormat == "" {
+		dns = "none"
+	} else {
+		dns = dnsFormat
+	}
+
 	str := fmt.Sprintf(`
 [Interface]
 PrivateKey = %s
 Address = %s
-DNS = none
+DNS = %s
 Jc = %v
 Jmin = %v
 Jmax = %v
@@ -41,6 +49,7 @@ PersistentKeepalive = 25
 `,
 		peer.PrivateKey,
 		peer.VirtualSocket,
+		dns,
 		a.obfuscation.Jc,
 		a.obfuscation.Jmin,
 		a.obfuscation.Jmax,
