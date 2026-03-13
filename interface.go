@@ -22,7 +22,7 @@ type awg struct {
 }
 
 // Create new awg service,
-// DOES NOT CREATE A NEW TUNNEL, BUT ONLY CONNECTS TO AN EXISTING TUNNEL
+// IT DOES NOT CREATE A NEW TUNNEL, ONLY CONNECTS TO AN EXISTING TUNNEL
 func New(deviceName, endpoint, storagePath string, obfuscation *Obfuscation) (*awg, error) {
 	client, err := wgctrl.New()
 	if err != nil {
