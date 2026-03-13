@@ -9,7 +9,7 @@ You need Go 1.26.0 or higher version
 
 To install the package, run the following command:
 ```
-go get github.com/slipynil/awgctrl-go@v1.1.0
+go get github.com/slipynil/awgctrl-go@v1.1.1
 ```
 
 ### Code example
