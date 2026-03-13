@@ -57,7 +57,7 @@ func main() {
 	awg.DeviceInfo()
 
 	// create a new peer
-	peer, err := awg.AddPeer("user", "10.66.66.02/32")
+	peer, err := awg.AddPeer("user", "10.66.66.02/32", "1.1.1.1, 8.8.8.8")
 	if err != nil {
 		panic(err)
 	}
